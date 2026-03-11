@@ -18,10 +18,13 @@ jobs:
           distribution: temurin
           java-version: 17
 
+      - name: Make gradlew executable
+        run: chmod +x android-app/gradlew
+       
       - name: Build APK
         run: |
-         cd android-app
-         ./gradlew assembleDebug || true
+            cd android-app
+            ./gradlew assembleDebug
 
       - name: Install Gradle
         run: sudo apt-get install gradle -y
