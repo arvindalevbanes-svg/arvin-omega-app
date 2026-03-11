@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ARVIN OMEGA</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 0; background: #0f172a; color: #e2e8f0; }
+    .wrap { max-width: 900px; margin: 0 auto; padding: 24px; }
+    .card { background: #111827; border: 1px solid #334155; border-radius: 16px; padding: 20px; margin-bottom: 20px; }
+    h1, h2 { margin-top: 0; }
+    button { padding: 12px 16px; border: 0; border-radius: 10px; background: #2563eb; color: white; cursor: pointer; }
+    input, select { padding: 10px; border-radius: 10px; border: 1px solid #475569; background: #0b1220; color: white; }
+    pre { white-space: pre-wrap; background: #020617; padding: 16px; border-radius: 12px; overflow-x: auto; }
+    .row { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
+    .muted { color: #94a3b8; }
+  </style>
+</head>
+<body>
+<div class="wrap">
+  <div class="card">
+    <h1>ARVIN OMEGA</h1>
+    <p class="muted">Hybrid dashboard for offline/cloud APK wrapping.</p>
+  </div>
+
+  <div class="card">
+    <h2>Backtest</h2>
+    <div class="row">
+      <input id="backtestFile" type="file" />
+      <button onclick="runBacktest()">Run Backtest</button>
+    </div>
+    <pre id="backtestOut">No output yet.</pre>
+  </div>
+
+  <div class="card">
+    <h2>Live</h2>
+    <div class="row">
+      <input id="liveFile" type="file" />
+      <button onclick="runLive()">Run Live</button>
+    </div>
+    <pre id="liveOut">No output yet.</pre>
+  </div>
+</div>
+
+<script>
+async function runBacktest() {
+  const fileInput = document.getElementById('backtestFile');
+  const out = document.getElementById('backtestOut');
+  if (!fileInput.files.length) {
+    out.textContent = 'Please choose a dataset file.';
+    return;
+  }
+  const form = new FormData();
+  form.append('dataset', fileInput.files[0]);
+  out.textContent = 'Running backtest...';
+  const res = await fetch('/api/backtest', { method: 'POST', body: form });
+  out.textContent = JSON.stringify(await res.json(), null, 2);
+}
+
+async function runLive() {
+  const fileInput = document.getElementById('liveFile');
+  const out = document.getElementById('liveOut');
+  if (!fileInput.files.length) {
+    out.textContent = 'Please choose a dataset file.';
+    return;
+  }
+  const form = new FormData();
+  form.append('dataset', fileInput.files[0]);
+  out.textContent = 'Running live mode...';
+  const res = await fetch('/api/live', { method: 'POST', body: form });
+  out.textContent = JSON.stringify(await res.json(), null, 2);
+}
+</script>
+</body>
+</html>
